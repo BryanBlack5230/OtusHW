@@ -7,9 +7,9 @@ namespace ShootEmUp
 	public sealed class BulletSystem : MonoBehaviour
 	{
 		[SerializeField] private int _initialCount = 50;
-		[SerializeField] private Transform _container;
+		[SerializeField] private Transform _inactiveContainer;
 		[SerializeField] private Bullet _prefab;
-		[SerializeField] private Transform _worldTransform;
+		[SerializeField] private Transform _activeContainer;
 		[SerializeField] private LevelBounds _levelBounds;
 
 		private Pool _bulletPool;
@@ -18,7 +18,7 @@ namespace ShootEmUp
 		
 		private void Awake()
 		{
-			_bulletPool = new(_prefab.gameObject, _initialCount, isFixedAmount: false, _worldTransform, _container);
+			_bulletPool = new(_prefab.gameObject, _initialCount, isFixedAmount: false, _activeContainer, _inactiveContainer);
 		}
 		
 		private void FixedUpdate()
@@ -38,8 +38,7 @@ namespace ShootEmUp
 
 		public void FlyBulletByArgs(Args args)
 		{
-			var pooledObject = _bulletPool.Get();
-			var bullet = pooledObject.GetComponent<Bullet>();
+			var bullet = _bulletPool.Get().GetComponent<Bullet>();
 
 			bullet.SetPosition(args.position);
 			bullet.SetColor(args.color);

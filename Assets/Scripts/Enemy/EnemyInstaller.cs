@@ -7,7 +7,6 @@ namespace ShootEmUp
 	{
 		[Header("Spawn")][SerializeField] private EnemyPositions _enemyPositions;
 		[SerializeField] private GameObject _character;
-		[SerializeField] private Transform _worldTransform; //delete
 		[SerializeField] private BulletSystem _bulletSystem;
 
 		private GameObject _enemy;
@@ -53,10 +52,7 @@ namespace ShootEmUp
 
 		private void SetEnemyTransform()
 		{
-			_enemy.transform.SetParent(_worldTransform);
-
-			var spawnPosition = _enemyPositions.RandomSpawnPosition();
-			_enemy.transform.position = spawnPosition.position;
+			_enemy.transform.position = _enemyPositions.RandomSpawnPosition().position;
 		}
 
 		public void InstallMover()
@@ -69,8 +65,6 @@ namespace ShootEmUp
 		private void InstallAttacker()
 		{
 			_attackAgent = _enemy.GetComponent<EnemyAttackAgent>();
-			// if (_enemy.TryGetComponent<EnemyAttackAgent>(out var attackAgent))
-			// 	return;
 
 			_attackAgent.SetTarget(_character);
 			_attackAgent.SetBulletSystem(_bulletSystem);

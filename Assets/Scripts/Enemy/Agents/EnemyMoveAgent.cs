@@ -11,9 +11,7 @@ namespace ShootEmUp
 		}
 
 		[SerializeField] private MoveComponent _moveComponent;
-
 		private Vector2 _destination;
-
 		private bool _isReached;
 
 		public void SetDestination(Vector2 endPoint)
