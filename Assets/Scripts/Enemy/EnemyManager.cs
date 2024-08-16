@@ -7,17 +7,24 @@ namespace ShootEmUp
 {
 	public sealed class EnemyManager : MonoBehaviour
 	{
-		[SerializeField] private EnemyPool _enemyPool;
+		[SerializeField] private Transform _activeContainer;
+		[SerializeField] private Transform _inactiveContainer;
+		[SerializeField] private GameObject _prefab;
 		[SerializeField] private EnemyInstaller _enemyInstaller;
-		
+		private Pool _enemyPool;
+		private const int ENEMY_AMOUNT = 7;
 		private readonly Dictionary<GameObject, EnemyAttackAgent> _activeEnemiesDict = new();
 
+		private void Awake() 
+		{
+			_enemyPool = new(_prefab, ENEMY_AMOUNT, isFixedAmount: true, _activeContainer, _inactiveContainer);
+		}
 		private IEnumerator Start()
 		{
 			while (true)
 			{
 				yield return new WaitForSeconds(1);
-				var enemy = _enemyPool.SpawnEnemy();
+				var enemy = _enemyPool.Get();
 				if (enemy == null) continue;
 
 				
@@ -34,7 +41,7 @@ namespace ShootEmUp
 			if (_activeEnemiesDict.Remove(enemy))
 			{
 				_enemyInstaller.Uninstall(enemy, OnDestroyed);
-				_enemyPool.UnspawnEnemy(enemy);
+				_enemyPool.Return(enemy);
 			}
 		}
 
