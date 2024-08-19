@@ -25,28 +25,28 @@ namespace ShootEmUp
 
 		public void Reset()
 		{
-			_currentTime = this._countdown;
+			_currentTime = _countdown;
 			IsAbleToShoot = new();
 		}
 
-		public void UpdateFiringSequence(float time)
+		public void OnUpdate(float time)
 		{
 			if (!IsAbleToShoot.IsTrue()) return;
 
 			UpdateCooldown(time);
 
-			if (IsNotOnCooldown())
+			if (!IsCooldown())
 				Fire();
 		}
 
-		public void UpdateCooldown(float time)
+		private void UpdateCooldown(float time)
 		{
 			_currentTime -= time;
 		}
 
-		public bool IsNotOnCooldown()
+		private bool IsCooldown()
 		{
-			return _currentTime <= 0;
+			return _currentTime > 0;
 		}
 
 		public void Fire()
@@ -57,7 +57,7 @@ namespace ShootEmUp
 			var vector = (Vector2) _target.transform.position - startPosition;
 			var direction = vector.normalized;
 
-			_bulletSystem.FlyBulletByArgs(new BulletSystem.Args
+			_bulletSystem.Shoot(new BulletSystem.ShootArgs
 			{
 				isPlayer = false,
 				physicsLayer = (int) PhysicsLayer.ENEMY_BULLET,

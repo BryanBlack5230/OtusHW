@@ -12,13 +12,13 @@ namespace ShootEmUp
 		private float _positionZ;
 		private Transform _myTransform;
 
-		[SerializeField] private Params _params;
+		[SerializeField] private BackgroundSettings _backgroundSettings;
 
 		private void Awake()
 		{
-			_startPositionY = _params.startPositionY;
-			_endPositionY = _params.endPositionY;
-			_movingSpeedY = _params.movingSpeedY;
+			_startPositionY = _backgroundSettings.startPositionY;
+			_endPositionY = _backgroundSettings.endPositionY;
+			_movingSpeedY = _backgroundSettings.movingSpeedY;
 			_myTransform = transform;
 			var position = _myTransform.position;
 			_positionX = position.x;
@@ -44,7 +44,7 @@ namespace ShootEmUp
 		}
 
 		[Serializable]
-		public sealed class Params
+		public sealed class BackgroundSettings
 		{
 			[SerializeField] public float startPositionY;
 			[SerializeField] public float endPositionY;

@@ -22,8 +22,8 @@ namespace ShootEmUp
 			SetEnemyTransform();
 
 			InstallHitPoints(onDestroyed);
-			InstallMover();
-			InstallAttacker();
+			InstallMoveAgent();
+			InstallAttackAgent();
 		}
 
 		private void InstallHitPoints(Action<GameObject> onDestroyed)
@@ -55,14 +55,14 @@ namespace ShootEmUp
 			_enemy.transform.position = _enemyPositions.RandomSpawnPosition().position;
 		}
 
-		public void InstallMover()
+		private void InstallMoveAgent()
 		{
 			_moveAgent = _enemy.GetComponent<EnemyMoveAgent>();
 
 			_moveAgent.SetDestination(_enemyPositions.RandomAttackPosition().position);
 		}
 		
-		private void InstallAttacker()
+		private void InstallAttackAgent()
 		{
 			_attackAgent = _enemy.GetComponent<EnemyAttackAgent>();
 

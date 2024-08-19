@@ -29,16 +29,16 @@ namespace ShootEmUp
 			for (int i = 0, count = _cache.Count; i < count; i++)
 			{
 				var bullet = _cache[i];
-				if (!_levelBounds.InBounds(bullet.transform.position))
+				if (!_levelBounds.IsInBounds(bullet.transform.position))
 				{
 					RemoveBullet(bullet);
 				}
 			}
 		}
 
-		public void FlyBulletByArgs(Args args)
+		public void Shoot(ShootArgs args)
 		{
-			var bullet = _bulletPool.Get().GetComponent<Bullet>();
+			var bullet = _bulletPool.Spawn().GetComponent<Bullet>();
 
 			bullet.SetPosition(args.position);
 			bullet.SetColor(args.color);
@@ -55,8 +55,26 @@ namespace ShootEmUp
 		
 		private void OnBulletCollision(Bullet bullet, Collision2D collision)
 		{
-			BulletUtils.DealDamage(bullet, collision.gameObject);
+			DealDamage(bullet, collision.gameObject);
 			RemoveBullet(bullet);
+		}
+		
+		private void DealDamage(Bullet bullet, GameObject other)
+		{
+			if (!other.TryGetComponent(out TeamComponent team))
+			{
+				return;
+			}
+
+			if (bullet.isPlayer == team.IsPlayer)
+			{
+				return;
+			}
+
+			if (other.TryGetComponent(out HitPointsComponent hitPoints))
+			{
+				hitPoints.TakeDamage(bullet.damage);
+			}
 		}
 
 		private void RemoveBullet(Bullet bullet)
@@ -68,7 +86,7 @@ namespace ShootEmUp
 			}
 		}
 		
-		public struct Args
+		public struct ShootArgs
 		{
 			public Vector2 position;
 			public Vector2 velocity;

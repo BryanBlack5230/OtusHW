@@ -29,7 +29,7 @@ namespace ShootEmUp
 			}
 		}
 		
-		public GameObject Get()
+		public GameObject Spawn()
 		{
 			if (_pool.TryDequeue(out GameObject obj))
 			{
