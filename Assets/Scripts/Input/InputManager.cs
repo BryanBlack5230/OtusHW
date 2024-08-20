@@ -3,17 +3,16 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-	public sealed class InputManager : MonoBehaviour
+	public sealed class InputManager : MonoBehaviour, IGameUpdateListener
 	{
 		public Vector2 HorizontalDirection { get; private set; }
 		public Action OnFireEvent;
 
 		[SerializeField] private InputConfig _inputConfig;
-
-		private void Update()
+		
+		private void Awake() 
 		{
-			CheckFireKey();
-			SetDirection();
+			IGameListener.Register(this);
 		}
 
 		private void CheckFireKey()
@@ -40,6 +39,12 @@ namespace ShootEmUp
 			}
 
 			HorizontalDirection = new(xPos, 0);
+		}
+
+		public void OnUpdate(float deltaTime)
+		{
+			CheckFireKey();
+			SetDirection();
 		}
 	}
 }

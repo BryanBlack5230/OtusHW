@@ -4,7 +4,7 @@ using UnityEngine.Pool;
 
 namespace ShootEmUp
 {
-	public sealed class BulletSystem : MonoBehaviour
+	public sealed class BulletSystem : MonoBehaviour, IGameFixedUpdateListener
 	{
 		[SerializeField] private int _initialCount = 50;
 		[SerializeField] private Transform _inactiveContainer;
@@ -18,22 +18,8 @@ namespace ShootEmUp
 		
 		private void Awake()
 		{
+			IGameListener.Register(this);
 			_bulletPool = new(_prefab.gameObject, _initialCount, isFixedAmount: false, _activeContainer, _inactiveContainer);
-		}
-		
-		private void FixedUpdate()
-		{
-			_cache.Clear();
-			_cache.AddRange(_activeBullets);
-
-			for (int i = 0, count = _cache.Count; i < count; i++)
-			{
-				var bullet = _cache[i];
-				if (!_levelBounds.IsInBounds(bullet.transform.position))
-				{
-					RemoveBullet(bullet);
-				}
-			}
 		}
 
 		public void Shoot(ShootArgs args)
@@ -85,7 +71,22 @@ namespace ShootEmUp
 				_bulletPool.Return(bullet.gameObject);
 			}
 		}
-		
+
+		public void OnFixedUpdate(float fixedDeltaTime)
+		{
+			_cache.Clear();
+			_cache.AddRange(_activeBullets);
+
+			for (int i = 0, count = _cache.Count; i < count; i++)
+			{
+				var bullet = _cache[i];
+				if (!_levelBounds.IsInBounds(bullet.transform.position))
+				{
+					RemoveBullet(bullet);
+				}
+			}
+		}
+
 		public struct ShootArgs
 		{
 			public Vector2 position;

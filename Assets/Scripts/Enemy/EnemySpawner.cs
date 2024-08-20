@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public class EnemySpawner: MonoBehaviour
+	public class EnemySpawner: MonoBehaviour, IGameStartListener, IGameFinishListener, IGamePauseListener, IGameResumeListener
 	{
 		[SerializeField] private Transform _activeContainer;
 		[SerializeField] private Transform _inactiveContainer;
@@ -13,15 +13,13 @@ namespace ShootEmUp
 		private Pool _enemyPool;
 		private const int ENEMY_AMOUNT = 7;
 		private readonly Dictionary<GameObject, EnemyAttackAgent> _activeEnemiesDict = new();
+		private Coroutine _spawnCouroutine;
 
 		private void Awake() 
 		{
+			IGameListener.Register(this);
+			
 			_enemyPool = new(_prefab, ENEMY_AMOUNT, isFixedAmount: true, _activeContainer, _inactiveContainer);
-		}
-		
-		private void Start()
-		{
-			StartCoroutine(Spawn());
 		}
 		
 		private IEnumerator Spawn()
@@ -51,5 +49,25 @@ namespace ShootEmUp
 		}
 		
 		public Dictionary<GameObject, EnemyAttackAgent> GetActiveEnemies() => _activeEnemiesDict;
+
+		public void OnStartGame()
+		{
+			_spawnCouroutine = StartCoroutine(Spawn());
+		}
+
+		public void OnFinishGame()
+		{
+			StopCoroutine(_spawnCouroutine);
+		}
+
+		public void OnPause()
+		{
+			StopCoroutine(_spawnCouroutine);
+		}
+
+		public void OnResume()
+		{
+			_spawnCouroutine = StartCoroutine(Spawn());
+		}
 	}
 }
