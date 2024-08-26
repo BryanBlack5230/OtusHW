@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-	public sealed class EnemyMoveAgent : MonoBehaviour, IGameFixedUpdateListener
+	public sealed class EnemyMoveAgent : IGameFixedUpdateListener
 	{
 		public Func<bool> IsReached
 		{
 			get { return () => _isReached; }
 		}
 
-		[SerializeField] private MoveComponent _moveComponent;
+		private readonly MoveComponent _moveComponent;
 		private Vector2 _destination;
 		private bool _isReached;
 
-		private void Awake() 
+		public EnemyMoveAgent(MoveComponent moveComponent)
 		{
-			IGameListener.Register(this);
+			_moveComponent = moveComponent;
 		}
 		
 		public void SetDestination(Vector2 endPoint)
@@ -32,7 +32,7 @@ namespace ShootEmUp
 				return;
 			}
 			
-			var vector = _destination - (Vector2) transform.position;
+			var vector = _destination - (Vector2) _moveComponent.transform.position;
 			if (vector.magnitude <= 0.25f)
 			{
 				_isReached = true;

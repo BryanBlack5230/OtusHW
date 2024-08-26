@@ -3,15 +3,21 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-	public sealed class EnemyAttackAgent : MonoBehaviour
+	public sealed class EnemyAttackAgent
 	{
 		public CompositeCondition IsAbleToShoot {get; private set;} = new();
-		[SerializeField] private WeaponComponent _weaponComponent;
-		[SerializeField] private float _countdown;
+		private WeaponComponent _weaponComponent;
+		private float _countdown;
 
 		private GameObject _target;
 		private BulletSystem _bulletSystem;
 		private float _currentTime;
+		
+		public EnemyAttackAgent(WeaponComponent weaponComponent, float countdown)
+		{
+			_weaponComponent = weaponComponent;
+			_countdown = countdown;
+		}
 
 		public void SetTarget(GameObject target)
 		{

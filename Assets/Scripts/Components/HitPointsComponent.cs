@@ -1,19 +1,19 @@
 using System;
-using UnityEngine;
 
 namespace ShootEmUp
 {
-	public sealed class HitPointsComponent : MonoBehaviour
+	public sealed class HitPointsComponent
 	{
-		public event Action<GameObject> HpEmpty;
+		public event Action<HitPointsComponent> HpEmpty;
 		
-		[SerializeField] private int _hitPoints;
+		private int _hitPoints;
 		private int _maxHitPoints;
 		
-		private void Awake() 
-		{
-			_maxHitPoints = _hitPoints;
-		}
+		public HitPointsComponent(int hitPoints)
+        {
+            _hitPoints = hitPoints;
+            _maxHitPoints = hitPoints;
+        }
 		
 		public bool IsHitPointsExists() 
 		{
@@ -24,7 +24,7 @@ namespace ShootEmUp
 		{
 			_hitPoints -= damage;
 			if (_hitPoints <= 0)
-				HpEmpty?.Invoke(gameObject);
+				HpEmpty?.Invoke(this);
 		}
 		
 		public void Reset()
