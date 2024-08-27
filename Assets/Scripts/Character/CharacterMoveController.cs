@@ -18,7 +18,7 @@ namespace ShootEmUp
 
 		public void OnFixedUpdate(float fixedDeltaTime)
 		{
-			_moveComponent.MoveByRigidbodyVelocity(_inputManager.HorizontalDirection * fixedDeltaTime);
+			_moveComponent.Move(_inputManager.HorizontalDirection * fixedDeltaTime);
 		}
 
 		public void OnPause()

@@ -32,7 +32,7 @@ namespace ShootEmUp
 				return;
 			}
 			
-			var vector = _destination - (Vector2) _moveComponent.transform.position;
+			var vector = _destination - (Vector2) _moveComponent.Position;
 			if (vector.magnitude <= 0.25f)
 			{
 				_isReached = true;
@@ -40,7 +40,7 @@ namespace ShootEmUp
 			}
 
 			var direction = vector.normalized * fixedDeltaTime;
-			_moveComponent.MoveByRigidbodyVelocity(direction);
+			_moveComponent.Move(direction);
 		}
 	}
 }

@@ -3,22 +3,8 @@ using Zenject;
 
 namespace ShootEmUp
 {
-	public class SceneInstaller : MonoInstaller
-	{
-		[SerializeField] private BulletSystem _bulletSystemPrefab;
-		[SerializeField] private GameObject _enemyPrefab;
 
-		public override void InstallBindings()
-		{
-			Container.Bind<GameLoopManager>().FromComponentInHierarchy().AsSingle();
-
-			Container.Bind<BulletSystem>().FromComponentInNewPrefab(_bulletSystemPrefab).AsSingle();
-
-			EnemyBindingsInstaller.Install(Container);
-		}
-	}
-	
-	public class EnemyBindingsInstaller : Installer<EnemyBindingsInstaller>
+    public class EnemyBindingsInstaller : Installer<EnemyBindingsInstaller>
 	{
 		public override void InstallBindings()
 		{
@@ -30,13 +16,16 @@ namespace ShootEmUp
 		}
 	}
 	
-	public sealed class GameManager : MonoBehaviour
+	public sealed class GameManager
 	{
-		[SerializeField] private GameLoopManager _gameLoopManager;
-		[SerializeField] private GameManagerUIController _uiController;
+		private GameLoopManager _gameLoopManager;
+		private GameManagerUIController _uiController;
 
-		private void Start()
+		public GameManager(GameLoopManager gameLoopManager, GameManagerUIController uiController)
 		{
+			_gameLoopManager = gameLoopManager;
+			_uiController = uiController;
+			
 			_uiController.SubscribeButtons(StartGame, PauseGame, ResumeGame);
 		}
 

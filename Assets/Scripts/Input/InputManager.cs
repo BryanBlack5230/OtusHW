@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-	public sealed class InputManager : MonoBehaviour, IGameUpdateListener
+	public sealed class InputManager : IGameUpdateListener
 	{
 		public Vector2 HorizontalDirection { get; private set; }
 		public Action OnFireEvent;
-
-		[SerializeField] private InputConfig _inputConfig;
+		private readonly InputConfig _inputConfig;
 		
-		private void Awake() 
+		public InputManager(InputConfig inputConfig) 
 		{
+			_inputConfig = inputConfig;
 			IGameListener.Register(this);
 		}
 
