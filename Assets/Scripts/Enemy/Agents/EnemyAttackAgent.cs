@@ -3,23 +3,23 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-	public sealed class EnemyAttackAgent
+	public sealed class EnemyAttackAgent : MonoBehaviour
 	{
 		public CompositeCondition IsAbleToShoot {get; private set;} = new();
 		private WeaponComponent _weaponComponent;
 		private float _countdown;
 
-		private GameObject _target;
+		private Transform _target;
 		private BulletSystem _bulletSystem;
 		private float _currentTime;
 		
-		public EnemyAttackAgent(WeaponComponent weaponComponent, float countdown)
+		public void Constructor(WeaponComponent weaponComponent, float countdown)
 		{
 			_weaponComponent = weaponComponent;
 			_countdown = countdown;
 		}
 
-		public void SetTarget(GameObject target)
+		public void SetTarget(Transform target)
 		{
 			_target = target;
 		}
@@ -60,7 +60,7 @@ namespace ShootEmUp
 			_currentTime += _countdown;
 			
 			var startPosition = _weaponComponent.Position;
-			var vector = (Vector2) _target.transform.position - startPosition;
+			var vector = (Vector2) _target.position - startPosition;
 			var direction = vector.normalized;
 
 			_bulletSystem.Shoot(new BulletSystem.ShootArgs

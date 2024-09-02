@@ -1,19 +1,14 @@
-using Zenject;
+using UnityEngine;
 
 namespace ShootEmUp
 {
-	public sealed class TeamComponent
+	public sealed class TeamComponent : MonoBehaviour
 	{
 		public bool IsPlayer
 		{
 			get { return _isPlayer; }
 		}
 		
-		private bool _isPlayer;
-		
-		public TeamComponent(bool isPlayer)
-		{
-			_isPlayer = isPlayer;
-		}
+		[SerializeField] private bool _isPlayer;
 	}
 }

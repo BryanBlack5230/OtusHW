@@ -6,7 +6,7 @@ namespace ShootEmUp
 	public class EnemyInstaller: MonoBehaviour
 	{
 		[Header("Spawn")][SerializeField] private EnemyPositions _enemyPositions;
-		[SerializeField] private GameObject _character;
+		[SerializeField] private Transform _character;
 		[SerializeField] private BulletSystem _bulletSystem;
 
 		private GameObject _enemy;
