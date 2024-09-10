@@ -1,13 +1,22 @@
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
 	public class CharacterShooterController: MonoBehaviour, IGameStartListener, IGameFinishListener, IGamePauseListener, IGameResumeListener
 	{
-		[SerializeField] private BulletSystem _bulletSystem;
-		[SerializeField] private BulletConfig _bulletConfig;
-		[SerializeField] private InputManager _inputManager;
 		[SerializeField] private WeaponComponent _weaponComponent;
+		private BulletSystem _bulletSystem;
+		private BulletConfig _bulletConfig;
+		private InputManager _inputManager;
+		
+		[Inject]
+		public void Construct(BulletSystem bulletSystem, BulletConfig bulletConfig, InputManager inputManager)
+		{
+			_bulletSystem = bulletSystem;
+			_bulletConfig = bulletConfig;
+			_inputManager = inputManager;
+		}
 		
 		private void Awake() 
 		{

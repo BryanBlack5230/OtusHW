@@ -1,11 +1,19 @@
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
 	public class CharacterDeathObserver: MonoBehaviour, IGameStartListener, IGameFinishListener, IGamePauseListener, IGameResumeListener
 	{
-		[SerializeField] private HitPointsComponent _hitPointsComponent;
-		[SerializeField] private GameManager _gameManager;
+		private HitPointsComponent _hitPointsComponent;
+		private GameManager _gameManager;
+		
+		[Inject]
+		public void Construct(GameManager enemyInstaller, [Inject(Id = "Player")] Transform character)
+		{
+			_gameManager = enemyInstaller;
+			_hitPointsComponent = character.GetComponent<HitPointsComponent>();
+		}
 		
 		private void OnCharacterDeath(GameObject _) => _gameManager.FinishGame();
 

@@ -1,12 +1,17 @@
-using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
 	public sealed class EnemyManager : MonoBehaviour, IGameFixedUpdateListener
 	{
-		[SerializeField] EnemySpawner _enemySpawner;
+		private EnemySpawner _enemySpawner;
+		
+		[Inject]
+		public void Construct(EnemySpawner enemySpawner)
+		{
+			_enemySpawner = enemySpawner;
+		}
 		
 		private void Awake() 
 		{

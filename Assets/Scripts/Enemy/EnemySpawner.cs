@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
@@ -8,18 +9,21 @@ namespace ShootEmUp
 	{
 		[SerializeField] private Transform _activeContainer;
 		[SerializeField] private Transform _inactiveContainer;
-		[SerializeField] private GameObject _prefab;
-		[SerializeField] private EnemyInstaller _enemyInstaller;
+		private EnemyInstaller _enemyInstaller;
 		private Pool _enemyPool;
 		private const int ENEMY_AMOUNT = 7;
 		private readonly Dictionary<GameObject, EnemyAttackAgent> _activeEnemiesDict = new();
 		private Coroutine _spawnCouroutine;
 
+		[Inject]
+		public void Construct(IEnemyFactory enemyFactory, EnemyInstaller enemyInstaller)
+		{
+			_enemyPool = new(() => enemyFactory.Create(), ENEMY_AMOUNT, isFixedAmount: true, _activeContainer, _inactiveContainer);
+			_enemyInstaller = enemyInstaller;
+		}
 		private void Awake() 
 		{
 			IGameListener.Register(this);
-			
-			_enemyPool = new(_prefab, ENEMY_AMOUNT, isFixedAmount: true, _activeContainer, _inactiveContainer);
 		}
 		
 		private IEnumerator Spawn()

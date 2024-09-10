@@ -35,35 +35,16 @@ namespace ShootEmUp
 			_listeners.Add(gameListener);
 			
 			RegisterListener(gameListener);
-			// RegisterListenerOld(gameListener);
 		}
 		
 		private void RegisterListener(IGameListener gameListener)
 		{
-			RegisterListenerOfType<IGameUpdateListener>(ref _updateListeners, gameListener);
-			RegisterListenerOfType<IGameFixedUpdateListener>(ref _fixedUpdateListeners, gameListener);
-			RegisterListenerOfType<IGameLateUpdateListener>(ref _lateUpdateListeners, gameListener);
-		}
-		
-		private void RegisterListenerOld(IGameListener gameListener)
-		{
-			if (gameListener is IGameUpdateListener gameUpdateListener)
-			{
-				_updateListeners.Add(gameUpdateListener);
-			}
-			
-			if (gameListener is IGameFixedUpdateListener fixedUpdateListener)
-			{
-				_fixedUpdateListeners.Add(fixedUpdateListener);
-			}
-			
-			if (gameListener is IGameLateUpdateListener lateUpdateListener)
-			{
-				_lateUpdateListeners.Add(lateUpdateListener);
-			}
+			RegisterListenerOfType(_updateListeners, gameListener);
+			RegisterListenerOfType(_fixedUpdateListeners, gameListener);
+			RegisterListenerOfType(_lateUpdateListeners, gameListener);
 		}
 
-		private void RegisterListenerOfType<T>(ref List<T> list, IGameListener gameListener) where T : class
+		private void RegisterListenerOfType<T>(List<T> list, IGameListener gameListener) where T : class
 		{
 			if (gameListener is T listener)
 			{

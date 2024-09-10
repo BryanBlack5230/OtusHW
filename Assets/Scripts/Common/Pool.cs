@@ -1,18 +1,19 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ShootEmUp
 {
-    public class Pool
+	public class Pool
 	{
 		private readonly Queue<GameObject> _pool = new();
-		private GameObject _prefab;
+		private readonly Func<GameObject> _factoryMethod; 
 		private Transform _activeContainer, _inactiveContainer;
 		private bool _isFixedAmount;
 
-		public Pool(GameObject prefab, int initialCount, bool isFixedAmount, Transform activeContainer, Transform inactiveContainer)
+		public Pool(Func<GameObject> factoryMethod, int initialCount, bool isFixedAmount, Transform activeContainer, Transform inactiveContainer)
 		{
-			_prefab = prefab;
+			_factoryMethod = factoryMethod;
 			_isFixedAmount = isFixedAmount;
 			_activeContainer = activeContainer;
 			_inactiveContainer = inactiveContainer;
@@ -24,8 +25,10 @@ namespace ShootEmUp
 		{
 			for (var i = 0; i < initialCount; i++)
 			{
-				var bullet = GameObject.Instantiate(_prefab, _inactiveContainer);
-				_pool.Enqueue(bullet);
+				var obj  = _factoryMethod();
+				obj.transform.SetParent(_inactiveContainer);
+				obj.SetActive(false);
+				_pool.Enqueue(obj);
 			}
 		}
 		
@@ -34,12 +37,14 @@ namespace ShootEmUp
 			if (_pool.TryDequeue(out GameObject obj))
 			{
 				obj.transform.SetParent(_activeContainer);
+				obj.SetActive(true);
 				return obj;
 			}
 
 			if (_isFixedAmount) return null;
 			
-			GameObject newObj = Object.Instantiate(_prefab, _activeContainer);
+			GameObject newObj = _factoryMethod();
+			newObj.transform.SetParent(_activeContainer);
 			_pool.Enqueue(newObj);
 			return newObj;
 		}
@@ -47,6 +52,7 @@ namespace ShootEmUp
 		public void Return(GameObject obj)
 		{
 			obj.transform.SetParent(_inactiveContainer);
+			obj.SetActive(false);
 			_pool.Enqueue(obj);
 		}
 	}

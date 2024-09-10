@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
+using Zenject;
 
 namespace ShootEmUp
 {
@@ -16,10 +16,14 @@ namespace ShootEmUp
 		private readonly HashSet<Bullet> _activeBullets = new();
 		private readonly List<Bullet> _cache = new();
 		
+		[Inject]
+		public void Construct(IBulletFactory bulletFactory)
+		{
+			_bulletPool = new Pool(() => bulletFactory.Create(), _initialCount, isFixedAmount: false, _activeContainer, _inactiveContainer);
+		}
 		private void Awake()
 		{
 			IGameListener.Register(this);
-			_bulletPool = new(_prefab.gameObject, _initialCount, isFixedAmount: false, _activeContainer, _inactiveContainer);
 		}
 
 		public void Shoot(ShootArgs args)

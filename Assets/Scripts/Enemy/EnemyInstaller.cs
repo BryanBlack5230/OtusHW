@@ -1,18 +1,26 @@
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
-	public class EnemyInstaller: MonoBehaviour
+	public class EnemyInstaller
 	{
-		[Header("Spawn")][SerializeField] private EnemyPositions _enemyPositions;
-		[SerializeField] private Transform _character;
-		[SerializeField] private BulletSystem _bulletSystem;
+		private EnemyPositions _enemyPositions;
+		private Transform _character;
+		private BulletSystem _bulletSystem;
 
 		private GameObject _enemy;
 		private EnemyMoveAgent _moveAgent;
 		private HitPointsComponent _hp;
 		private EnemyAttackAgent _attackAgent;
+		
+		public EnemyInstaller(EnemyPositions enemyPositions, BulletSystem bulletSystem, [Inject(Id = "Player")] Transform character)
+		{
+			_enemyPositions = enemyPositions;
+			_bulletSystem = bulletSystem;
+			_character = character;
+		}
 
 		public void Install(GameObject enemy, Action<GameObject> onDestroyed)
 		{
