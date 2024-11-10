@@ -184,6 +184,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c93ebaecfbaabd9449438f4ab6653b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerTransform: {fileID: 4414282821800802396}
+  _enemyPrefab: {fileID: 559606060570185700, guid: 87fe189881a524806800482ac8eaaa83,
+    type: 3}
+  _bulletPrefab: {fileID: 201757604187811891, guid: 5fe72886874b4e445b06cf777ca4920d,
+    type: 3}
 --- !u!114 &131636522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,8 +202,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers:
-  - {fileID: 0}
-  _monoInstallers: []
+  - {fileID: 11400000, guid: 5d592c6e120a30443953381ad73eead9, type: 2}
+  _monoInstallers:
+  - {fileID: 131636521}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -681,7 +687,6 @@ GameObject:
   m_Component:
   - component: {fileID: 562298204}
   - component: {fileID: 562298205}
-  - component: {fileID: 562298208}
   - component: {fileID: 562298209}
   m_Layer: 0
   m_Name: EnemySystem
@@ -718,22 +723,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32dae85f8264479bac19d85418d92392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemySpawner: {fileID: 562298209}
---- !u!114 &562298208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562298203}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 974e5bc569a119942a31d5bb33fc4f77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enemyPositions: {fileID: 7166351703523243261}
-  _character: {fileID: 4414282821800802396}
-  _bulletSystem: {fileID: 363245577}
 --- !u!114 &562298209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,8 +737,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _activeContainer: {fileID: 1512145769}
   _inactiveContainer: {fileID: 178513672}
-  _prefab: {fileID: 559606060570185700, guid: 87fe189881a524806800482ac8eaaa83, type: 3}
-  _enemyInstaller: {fileID: 562298208}
 --- !u!1 &883274639
 GameObject:
   m_ObjectHideFlags: 0

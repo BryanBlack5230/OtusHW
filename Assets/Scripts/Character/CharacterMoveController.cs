@@ -1,12 +1,18 @@
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
 	public class CharacterMoveController: MonoBehaviour, IGameStartListener, IGameFinishListener, IGamePauseListener, IGameResumeListener, IGameFixedUpdateListener
 	{
 		[SerializeField] private MoveComponent _moveComponent;
-		[SerializeField] private InputManager _inputManager;
+		private InputManager _inputManager;
 
+		[Inject]
+		public void Construct(InputManager inputManager)
+		{
+			_inputManager = inputManager;
+		}
 		private void Awake() 
 		{
 			IGameListener.Register(this);

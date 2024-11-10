@@ -3,19 +3,6 @@ using Zenject;
 
 namespace ShootEmUp
 {
-
-    public class EnemyBindingsInstaller : Installer<EnemyBindingsInstaller>
-	{
-		public override void InstallBindings()
-		{
-			Container.Bind<WeaponComponent>().AsTransient();
-			Container.Bind<MoveComponent>().AsTransient();
-			Container.Bind<HitPointsComponent>().AsTransient();
-			Container.Bind<EnemyMoveAgent>().AsTransient();
-			Container.Bind<EnemyAttackAgent>().AsTransient();
-		}
-	}
-	
 	public sealed class GameManager
 	{
 		private GameLoopManager _gameLoopManager;

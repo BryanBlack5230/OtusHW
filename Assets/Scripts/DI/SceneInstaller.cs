@@ -27,7 +27,11 @@ namespace ShootEmUp
 			Container.Bind<EnemyPositions>().FromComponentInHierarchy().AsSingle();
 			Container.Bind<LevelBounds>().FromComponentInHierarchy().AsSingle();
 			
-			Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle().WithArguments(_enemyPrefab);
+			Container.BindFactory<GameObject, PlaceholderFactory<GameObject>>()
+            .FromComponentInNewPrefab(_enemyPrefab)
+            .AsTransient();
+
+			Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
 			Container.Bind<IBulletFactory>().To<BulletFactory>().AsSingle().WithArguments(_bulletPrefab);
 
 		}

@@ -9,9 +9,9 @@ namespace ShootEmUp
 		private GameManager _gameManager;
 		
 		[Inject]
-		public void Construct(GameManager enemyInstaller, [Inject(Id = "Player")] Transform character)
+		public void Construct(GameManager gameManager, [Inject(Id = "Player")] Transform character)
 		{
-			_gameManager = enemyInstaller;
+			_gameManager = gameManager;
 			_hitPointsComponent = character.GetComponent<HitPointsComponent>();
 		}
 		
