@@ -189,6 +189,7 @@ MonoBehaviour:
     type: 3}
   _bulletPrefab: {fileID: 201757604187811891, guid: 5fe72886874b4e445b06cf777ca4920d,
     type: 3}
+  enemyFireCooldown: 5
 --- !u!114 &131636522
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,18 +12,16 @@ namespace ShootEmUp
 	{
 		private readonly DiContainer _container;
 		private readonly GameObject _enemyPrefab;
-		private readonly Transform _inactiveContainer;
 		
-		public EnemyFactory(DiContainer container, GameObject enemyPrefab, Transform inactiveContainer)
+		public EnemyFactory(DiContainer container, GameObject enemyPrefab)
 		{
 			_container = container;
 			_enemyPrefab = enemyPrefab;
-			_inactiveContainer = inactiveContainer;
 		}
 
 		public GameObject Create()
 		{
-			var enemy = _container.InstantiatePrefab(_enemyPrefab, _inactiveContainer);
+			var enemy = _container.InstantiatePrefab(_enemyPrefab);
 			return enemy;
 		}
 	}

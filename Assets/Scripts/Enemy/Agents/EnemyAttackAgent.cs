@@ -1,9 +1,9 @@
-using System;
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
-	public sealed class EnemyAttackAgent : MonoBehaviour
+	public sealed class EnemyAttackAgent
 	{
 		public CompositeCondition IsAbleToShoot {get; private set;} = new();
 		private WeaponComponent _weaponComponent;
@@ -13,7 +13,7 @@ namespace ShootEmUp
 		private BulletSystem _bulletSystem;
 		private float _currentTime;
 		
-		public void Constructor(WeaponComponent weaponComponent, float countdown)
+		public EnemyAttackAgent(WeaponComponent weaponComponent, float countdown)
 		{
 			_weaponComponent = weaponComponent;
 			_countdown = countdown;

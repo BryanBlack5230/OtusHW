@@ -10,10 +10,7 @@ namespace ShootEmUp
 		private Transform _character;
 		private BulletSystem _bulletSystem;
 
-		private GameObject _enemy;
-		private EnemyMoveAgent _moveAgent;
-		private HitPointsComponent _hp;
-		private EnemyAttackAgent _attackAgent;
+		private Enemy _enemy;
 		
 		public EnemyInstaller(EnemyPositions enemyPositions, BulletSystem bulletSystem, [Inject(Id = "Player")] Transform character)
 		{
@@ -22,10 +19,8 @@ namespace ShootEmUp
 			_character = character;
 		}
 
-		public void Install(GameObject enemy, Action<GameObject> onDestroyed)
+		public void Install(Enemy enemy, Action<GameObject> onDestroyed)
 		{
-			if (enemy == null) return;
-
 			_enemy = enemy;
 			SetEnemyTransform();
 
@@ -36,27 +31,20 @@ namespace ShootEmUp
 
 		private void InstallHitPoints(Action<GameObject> onDestroyed)
 		{
-			_hp = _enemy.GetComponent<HitPointsComponent>();
-			_hp.HpEmpty += onDestroyed;
+			_enemy.HitPoints.HpEmpty += onDestroyed;
 		}
 
-		public void Uninstall(GameObject enemy, Action<GameObject> onDestroyed)
+		public void Uninstall(Enemy enemy, Action<GameObject> onDestroyed)
 		{
-			if (enemy == null) return;
+			if (!enemy) return;
 
-			if (enemy.TryGetComponent<HitPointsComponent>(out var hp))
-			{
-				hp.HpEmpty -= onDestroyed;
-				hp.Reset();
-			}
+			enemy.HitPoints.HpEmpty -= onDestroyed;
+			enemy.HitPoints.Reset();
 			
-			if (enemy.TryGetComponent<EnemyAttackAgent>(out var attackAgent))
-			{
-				attackAgent.Reset();
-			}
+			enemy.AttackAgent.Reset();
 		}
 
-		public EnemyAttackAgent GetAttackAgent() => _attackAgent;
+		public EnemyAttackAgent GetAttackAgent() => _enemy.AttackAgent;
 
 		private void SetEnemyTransform()
 		{
@@ -65,20 +53,17 @@ namespace ShootEmUp
 
 		private void InstallMoveAgent()
 		{
-			_moveAgent = _enemy.GetComponent<EnemyMoveAgent>();
-
-			_moveAgent.SetDestination(_enemyPositions.RandomAttackPosition().position);
+			_enemy.MoveAgent.SetTransform(_enemy.transform);
+			_enemy.MoveAgent.SetDestination(_enemyPositions.RandomAttackPosition().position);
 		}
 		
 		private void InstallAttackAgent()
 		{
-			_attackAgent = _enemy.GetComponent<EnemyAttackAgent>();
-
-			_attackAgent.SetTarget(_character);
-			_attackAgent.SetBulletSystem(_bulletSystem);
-			_attackAgent.IsAbleToShoot
-							.Append(_moveAgent.IsReached)
-							.Append(_hp.IsHitPointsExists);
+			_enemy.AttackAgent.SetTarget(_character);
+			_enemy.AttackAgent.SetBulletSystem(_bulletSystem);
+			_enemy.AttackAgent.IsAbleToShoot
+							.Append(_enemy.MoveAgent.IsReached)
+							.Append(_enemy.HitPoints.IsHitPointsExists);
 		}
 	}
 }

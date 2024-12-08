@@ -12,7 +12,7 @@ namespace ShootEmUp
 		private EnemyInstaller _enemyInstaller;
 		private Pool _enemyPool;
 		private const int ENEMY_AMOUNT = 7;
-		private readonly Dictionary<GameObject, EnemyAttackAgent> _activeEnemiesDict = new();
+		private readonly Dictionary<Enemy, EnemyAttackAgent> _activeEnemiesDict = new();
 		private Coroutine _spawnCouroutine;
 
 		[Inject]
@@ -30,29 +30,36 @@ namespace ShootEmUp
 		{
 			while (true)
 			{
+				Debug.Log("while loop begin");
 				yield return new WaitForSeconds(1);
+				Debug.Log("spawn enemy");
 				var enemy = _enemyPool.Spawn();
 				if (enemy == null) continue;
 
-				
-				if (!_activeEnemiesDict.ContainsKey(enemy))
+				if (enemy.TryGetComponent<Enemy>(out Enemy enemyComponent))
 				{
-					_enemyInstaller.Install(enemy, OnEnemyDestroyed);
-					_activeEnemiesDict.Add(enemy, _enemyInstaller.GetAttackAgent());
+					if (!_activeEnemiesDict.ContainsKey(enemyComponent))
+					{
+						_enemyInstaller.Install(enemyComponent, OnEnemyDestroyed);
+						_activeEnemiesDict.Add(enemyComponent, enemyComponent.AttackAgent);
+					}
 				}
 			}
 		}
 
 		private void OnEnemyDestroyed(GameObject enemy)
 		{
-			if (_activeEnemiesDict.Remove(enemy))
+			if (enemy.TryGetComponent<Enemy>(out Enemy enemyComponent))
 			{
-				_enemyInstaller.Uninstall(enemy, OnEnemyDestroyed);
-				_enemyPool.Return(enemy);
+				if (_activeEnemiesDict.Remove(enemyComponent))
+				{
+					_enemyInstaller.Uninstall(enemyComponent, OnEnemyDestroyed);
+					_enemyPool.Return(enemy);
+				}
 			}
 		}
 		
-		public Dictionary<GameObject, EnemyAttackAgent> GetActiveEnemies() => _activeEnemiesDict;
+		public Dictionary<Enemy, EnemyAttackAgent> GetActiveEnemies() => _activeEnemiesDict;
 
 		public void OnStartGame()
 		{
