@@ -1,31 +1,24 @@
-using UnityEngine;
 using Zenject;
 
 namespace ShootEmUp
 {
-	public sealed class EnemyManager : MonoBehaviour, IGameFixedUpdateListener
+	public sealed class EnemyManager : IGameFixedUpdateListener
 	{
 		private EnemySpawner _enemySpawner;
 		
-		[Inject]
-		public void Construct(EnemySpawner enemySpawner)
+		public EnemyManager(EnemySpawner enemySpawner)
 		{
 			_enemySpawner = enemySpawner;
-		}
-		
-		private void Awake() 
-		{
-			IGameListener.Register(this);
 		}
 
 		public void OnFixedUpdate(float fixedDeltaTime)
 		{
 			foreach (var enemy in _enemySpawner.GetActiveEnemies())
 			{
-				var attackAgent = enemy.Value;
-				if (attackAgent == null) continue;
+				var facade = enemy.Key;
 				
-				attackAgent.OnUpdate(fixedDeltaTime);
+				facade.AttackAgent.OnUpdate(fixedDeltaTime);
+				facade.MoveAgent.OnUpdate(fixedDeltaTime);
 			}
 		}
 	}

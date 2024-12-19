@@ -9,57 +9,51 @@ namespace ShootEmUp
 	{
 		[SerializeField] private Transform _activeContainer;
 		[SerializeField] private Transform _inactiveContainer;
-		private EnemyInstaller _enemyInstaller;
+		private EnemyInitializer _enemyInitializer;
 		private Pool _enemyPool;
 		private const int ENEMY_AMOUNT = 7;
-		private readonly Dictionary<Enemy, EnemyAttackAgent> _activeEnemiesDict = new();
+		private readonly Dictionary<EnemyFacade, EnemyAttackAgent> _activeEnemies = new();
 		private Coroutine _spawnCouroutine;
 
 		[Inject]
-		public void Construct(IEnemyFactory enemyFactory, EnemyInstaller enemyInstaller)
+		public void Construct(IEnemyFactory enemyFactory, EnemyInitializer enemyInstaller)
 		{
 			_enemyPool = new(() => enemyFactory.Create(), ENEMY_AMOUNT, isFixedAmount: true, _activeContainer, _inactiveContainer);
-			_enemyInstaller = enemyInstaller;
-		}
-		private void Awake() 
-		{
-			IGameListener.Register(this);
+			_enemyInitializer = enemyInstaller;
 		}
 		
 		private IEnumerator Spawn()
 		{
 			while (true)
 			{
-				Debug.Log("while loop begin");
 				yield return new WaitForSeconds(1);
-				Debug.Log("spawn enemy");
-				var enemy = _enemyPool.Spawn();
-				if (enemy == null) continue;
+				var enemyGameObject = _enemyPool.Spawn();
+				if (enemyGameObject == null) continue;
 
-				if (enemy.TryGetComponent<Enemy>(out Enemy enemyComponent))
+				if (enemyGameObject.TryGetComponent<EnemyFacade>(out EnemyFacade enemy))
 				{
-					if (!_activeEnemiesDict.ContainsKey(enemyComponent))
+					if (!_activeEnemies.ContainsKey(enemy))
 					{
-						_enemyInstaller.Install(enemyComponent, OnEnemyDestroyed);
-						_activeEnemiesDict.Add(enemyComponent, enemyComponent.AttackAgent);
+						_enemyInitializer.Initialize(enemy, OnEnemyDestroyed);
+						_activeEnemies.Add(enemy, enemy.AttackAgent);
 					}
 				}
 			}
 		}
 
-		private void OnEnemyDestroyed(GameObject enemy)
+		private void OnEnemyDestroyed(GameObject enemyGameObject)
 		{
-			if (enemy.TryGetComponent<Enemy>(out Enemy enemyComponent))
+			if (enemyGameObject.TryGetComponent<EnemyFacade>(out EnemyFacade enemy))
 			{
-				if (_activeEnemiesDict.Remove(enemyComponent))
+				if (_activeEnemies.Remove(enemy))
 				{
-					_enemyInstaller.Uninstall(enemyComponent, OnEnemyDestroyed);
-					_enemyPool.Return(enemy);
+					_enemyInitializer.Reset(enemy, OnEnemyDestroyed);
+					_enemyPool.Return(enemyGameObject);
 				}
 			}
 		}
 		
-		public Dictionary<Enemy, EnemyAttackAgent> GetActiveEnemies() => _activeEnemiesDict;
+		public Dictionary<EnemyFacade, EnemyAttackAgent> GetActiveEnemies() => _activeEnemies;
 
 		public void OnStartGame()
 		{

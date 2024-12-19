@@ -3,7 +3,7 @@ using Zenject;
 
 namespace ShootEmUp
 {
-	public sealed class Enemy : MonoBehaviour
+	public sealed class EnemyFacade : MonoBehaviour
 	{
 		public EnemyAttackAgent AttackAgent {private set; get;}
 		public EnemyMoveAgent MoveAgent {private set; get;}
@@ -12,8 +12,8 @@ namespace ShootEmUp
 		[Inject]
 		public void Constructor(EnemyAttackAgent enemyAttackAgent, EnemyMoveAgent moveAgent, HitPointsComponent hitPoints)
 		{
-			AttackAgent = enemyAttackAgent; // WeaponComponent
-			MoveAgent = moveAgent; // MoveComponent, transform
+			AttackAgent = enemyAttackAgent;
+			MoveAgent = moveAgent;
 			HitPoints = hitPoints;
 		}
 	}

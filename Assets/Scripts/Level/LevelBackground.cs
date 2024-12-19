@@ -34,8 +34,6 @@ namespace ShootEmUp
 
 		private void Awake()
 		{
-			IGameListener.Register(this);
-			
 			_startPositionY = _backgroundSettings.startPositionY;
 			_endPositionY = _backgroundSettings.endPositionY;
 			_movingSpeedY = _backgroundSettings.movingSpeedY;

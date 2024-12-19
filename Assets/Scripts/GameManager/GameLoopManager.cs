@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 namespace ShootEmUp
 {
 	public enum State
@@ -20,21 +21,15 @@ namespace ShootEmUp
 		
 		private State _state = State.Unknown;
 		
-		private void Awake()
+		[Inject]
+		private void Construct(List<IGameListener> gameListeners)
 		{
-			IGameListener.OnRegister += OnRegister;
-		}
-		
-		private void OnDestroy()
-		{
-			IGameListener.OnRegister -= OnRegister;
-		}
-		
-		private void OnRegister(IGameListener gameListener)
-		{
-			_listeners.Add(gameListener);
+			_listeners.AddRange(gameListeners);
 			
-			RegisterListener(gameListener);
+			foreach (var listener in gameListeners)
+			{
+				RegisterListener(listener);
+			}
 		}
 		
 		private void RegisterListener(IGameListener gameListener)

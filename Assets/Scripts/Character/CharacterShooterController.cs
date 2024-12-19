@@ -18,11 +18,6 @@ namespace ShootEmUp
 			_inputManager = inputManager;
 		}
 		
-		private void Awake() 
-		{
-			IGameListener.Register(this);
-		}
-		
 		private void OnFire()
 		{
 			_bulletSystem.Shoot(new BulletSystem.ShootArgs

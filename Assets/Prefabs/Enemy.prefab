@@ -17,6 +17,9 @@ GameObject:
   - component: {fileID: 5568771391735819373}
   - component: {fileID: 5568771391735819374}
   - component: {fileID: 7506629126879204764}
+  - component: {fileID: 2943428559662386211}
+  - component: {fileID: 5660368946906883300}
+  - component: {fileID: 903667752475204035}
   m_Layer: 11
   m_Name: Enemy
   m_TagString: Untagged
@@ -182,6 +185,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _firePoint: {fileID: 3195880656587174614}
 --- !u!114 &7506629126879204764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02fe2c33df296f141bc0b94d76fc567d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2943428559662386211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 5660368946906883300}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &5660368946906883300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559606060570185700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d83d6a0c26816f47a85e1fc7dae3e55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyFireCooldown: 5
+--- !u!114 &903667752475204035
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

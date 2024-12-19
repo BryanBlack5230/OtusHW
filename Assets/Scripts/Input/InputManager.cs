@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Zenject;
 
 namespace ShootEmUp
 {
@@ -12,7 +13,6 @@ namespace ShootEmUp
 		public InputManager(InputConfig inputConfig) 
 		{
 			_inputConfig = inputConfig;
-			IGameListener.Register(this);
 		}
 
 		private void CheckFireKey()

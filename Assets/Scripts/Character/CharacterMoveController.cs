@@ -13,10 +13,6 @@ namespace ShootEmUp
 		{
 			_inputManager = inputManager;
 		}
-		private void Awake() 
-		{
-			IGameListener.Register(this);
-		}
 
 		public void OnFinishGame()
 		{

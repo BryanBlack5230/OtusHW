@@ -3,13 +3,12 @@ using Zenject;
 
 namespace ShootEmUp
 {
-	public class CharacterDeathObserver: MonoBehaviour, IGameStartListener, IGameFinishListener, IGamePauseListener, IGameResumeListener
+	public class CharacterDeathObserver: IGameStartListener, IGameFinishListener, IGamePauseListener, IGameResumeListener
 	{
 		private HitPointsComponent _hitPointsComponent;
 		private GameManager _gameManager;
-		
-		[Inject]
-		public void Construct(GameManager gameManager, [Inject(Id = "Player")] Transform character)
+
+		public CharacterDeathObserver(GameManager gameManager, [Inject(Id = "Player")] Transform character)
 		{
 			_gameManager = gameManager;
 			_hitPointsComponent = character.GetComponent<HitPointsComponent>();

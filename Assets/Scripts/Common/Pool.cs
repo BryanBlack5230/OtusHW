@@ -26,7 +26,6 @@ namespace ShootEmUp
 			for (var i = 0; i < initialCount; i++)
 			{
 				var obj  = _factoryMethod();
-				Debug.Log("initializing object " + obj.transform.name);
 				obj.transform.SetParent(_inactiveContainer);
 				obj.SetActive(false);
 				_pool.Enqueue(obj);
@@ -35,10 +34,8 @@ namespace ShootEmUp
 		
 		public GameObject Spawn()
 		{
-			Debug.Log("spawning");
 			if (_pool.TryDequeue(out GameObject obj))
 			{
-				Debug.Log("dequeu");
 				obj.transform.SetParent(_activeContainer);
 				obj.SetActive(true);
 				return obj;
@@ -46,7 +43,6 @@ namespace ShootEmUp
 
 			if (_isFixedAmount) return null;
 			
-			Debug.Log("spawn new");
 			GameObject newObj = _factoryMethod();
 			newObj.transform.SetParent(_activeContainer);
 			_pool.Enqueue(newObj);

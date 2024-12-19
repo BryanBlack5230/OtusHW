@@ -4,7 +4,7 @@ using Zenject;
 
 namespace ShootEmUp
 {
-	public sealed class EnemyMoveAgent : IGameFixedUpdateListener
+	public sealed class EnemyMoveAgent
 	{
 		public Func<bool> IsReached
 		{
@@ -18,8 +18,6 @@ namespace ShootEmUp
 		
 		public EnemyMoveAgent(MoveComponent moveComponent)
 		{
-			IGameListener.Register(this);
-			
 			_moveComponent = moveComponent;
 		}
 		
@@ -33,13 +31,10 @@ namespace ShootEmUp
 			_destination = endPoint;
 			_isReached = false;
 		}
-
-		public void OnFixedUpdate(float fixedDeltaTime)
+		
+		public void OnUpdate(float fixedDeltaTime)
 		{
-			if (_isReached)
-			{
-				return;
-			}
+			if (_isReached) return;
 			
 			var vector = _destination - (Vector2) _transform.position;
 			if (vector.magnitude <= 0.25f)

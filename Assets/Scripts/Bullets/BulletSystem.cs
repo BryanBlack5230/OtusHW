@@ -4,26 +4,22 @@ using Zenject;
 
 namespace ShootEmUp
 {
-	public sealed class BulletSystem : MonoBehaviour, IGameFixedUpdateListener
+	public sealed class BulletSystem : MonoBehaviour, IGameFixedUpdateListener, IGamePauseListener, IGameResumeListener
 	{
 		[SerializeField] private int _initialCount = 50;
 		[SerializeField] private Transform _inactiveContainer;
-		[SerializeField] private Bullet _prefab;
 		[SerializeField] private Transform _activeContainer;
-		[SerializeField] private LevelBounds _levelBounds;
+		private LevelBounds _levelBounds;
 
 		private Pool _bulletPool;
 		private readonly HashSet<Bullet> _activeBullets = new();
 		private readonly List<Bullet> _cache = new();
 		
 		[Inject]
-		public void Construct(IBulletFactory bulletFactory)
+		public void Construct(IBulletFactory bulletFactory, LevelBounds levelBounds)
 		{
 			_bulletPool = new Pool(() => bulletFactory.Create(), _initialCount, isFixedAmount: false, _activeContainer, _inactiveContainer);
-		}
-		private void Awake()
-		{
-			IGameListener.Register(this);
+			_levelBounds = levelBounds;
 		}
 
 		public void Shoot(ShootArgs args)
@@ -88,6 +84,22 @@ namespace ShootEmUp
 				{
 					RemoveBullet(bullet);
 				}
+			}
+		}
+
+		public void OnPause()
+		{
+			foreach (var bullet in _activeBullets)
+			{
+				bullet.OnPause();
+			}
+		}
+
+		public void OnResume()
+		{
+			foreach (var bullet in _activeBullets)
+			{
+				bullet.OnResume();
 			}
 		}
 
