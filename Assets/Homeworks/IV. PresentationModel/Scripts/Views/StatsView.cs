@@ -1,41 +1,58 @@
-using Lessons.Architecture.PM;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StatsView : MonoBehaviour, IHeroPart
 {
-    [SerializeField] private TextMeshProUGUI[] _stats;
-
+    [SerializeField] private StatView _statViewPrefab;
+    [SerializeField] private Transform _statsContainer;
+    
+    private List<StatView> _statViews = new();
+    private StatsPresenter _statsPresenter;
     public void Initialized(StatsPresenter statsPresenter)
     {
-        UpdateStats(statsPresenter.Stats);
+        _statsPresenter = statsPresenter;
+        
+        _statsPresenter.OnStatRemoved += OnStatRemoved;
+        _statsPresenter.OnStatAdded += OnStatAdded;
+        
+        foreach (var presenter in _statsPresenter.StatPresenters)
+        {
+            OnStatAdded(presenter);
+        }
     }
 
-    public void UpdateStats(CharacterStat[] stats)
+    private void OnStatRemoved(string name)
     {
-        if (_stats == null) return;
-
-        for (int i = 0; i < _stats.Length; i++)
+        foreach (var view in _statViews)
         {
-            if (stats.Length <= i)
+            if (view.Name.Equals(name))
             {
-                UpdateStat(i);
-            }
-            else
-            {
-                var stat = stats[i];
-                UpdateStat(i, stat.Name, stat.Value.ToString());
+                view.Destroy();
+                _statViews.Remove(view);
+                return;
             }
         }
     }
 
-    private void UpdateStat(int index, string statName = "", string value = "")
+    private void OnStatAdded(StatPresenter presenter)
     {
-        _stats[index].text = $"{statName}: {value}";
+        var statView = Instantiate(_statViewPrefab, _statsContainer);
+        statView.Initialized(presenter);
+        _statViews.Add(statView);
     }
+
 
     public void Destroy()
     {
+        _statsPresenter.OnStatRemoved -= OnStatRemoved;
+        _statsPresenter.OnStatAdded -= OnStatAdded;
+        
+        foreach (var view in _statViews)
+        {
+            view.Destroy();
+        }
+        
+        _statViews.Clear();
         Destroy(gameObject);
     }
 }
