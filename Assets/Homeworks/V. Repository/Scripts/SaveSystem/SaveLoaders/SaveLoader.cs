@@ -37,7 +37,7 @@ namespace SaveSystem
         }
 
         protected abstract TData ConvertToData();
-        protected abstract void SetupData(TData data);
+        protected abstract void SetupData(TData unitData);
         protected virtual void SetupDefaultData() {}
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SaveSystem
 {
-    public class ResourceData
+    public struct ResourceData
     {
         public string ID;
         public int Amount;
@@ -39,13 +39,13 @@ namespace SaveSystem
             return list.ToArray();
         }
 
-        protected override void SetupData(ResourceData[] resourceData)
+        protected override void SetupData(ResourceData[] unitData)
         {
             var builder = new StringBuilder();
-            builder.AppendLine($"Setting up Resources({resourceData.Length}) to GameObjects({base.service.GetResources().Count()})\n");
+            builder.AppendLine($"Setting up Resources({unitData.Length}) to GameObjects({base.service.GetResources().Count()})\n");
             foreach (var resource in base.service.GetResources())
             {
-                foreach (var data in resourceData)
+                foreach (var data in unitData)
                 {
                     if (resource.ID == data.ID)
                     {

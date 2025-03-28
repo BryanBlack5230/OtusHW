@@ -15,11 +15,5 @@ namespace GameEngine
             _resourceService = resourceService;
             _unitManager = unitManager;
         }
-
-        [Button]
-        public void SetResources()
-        {
-            _resourceService.SetResources(FindObjectsOfType<Resource>());
-        }
     }
 }

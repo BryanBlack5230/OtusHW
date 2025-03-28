@@ -1,20 +1,14 @@
 using System.Collections.Generic;
+using Encryption;
 using Newtonsoft.Json;
 using UnityEngine;
 
 namespace SaveSystem
 {
-    public interface IGameRepository
-    {
-        public void SaveState();
-        public void LoadState();
-        public void SetData<T>(T data);
-        public bool TryGetData<T>(out T data);
-    }
-    public class GameRepository : IGameRepository
+    public class GameEncryptedRepository : IGameRepository
     {
         private Dictionary<string, string> _gameState = new Dictionary<string, string>();
-        private const string GAME_STATE_KEY = "GameState";
+        private const string GAME_STATE_KEY = "NotSoSecureGameSaveData";
 
         public bool TryGetData<T>(out T data)
         {
@@ -40,7 +34,9 @@ namespace SaveSystem
         {
             if (PlayerPrefs.HasKey(GAME_STATE_KEY))
             {
-                var gameStateJson = PlayerPrefs.GetString(GAME_STATE_KEY);
+                var encryptedData = PlayerPrefs.GetString(GAME_STATE_KEY);
+                var gameStateJson = Encryptor.Decrypt(encryptedData);
+                Debug.Log("Loaded Data:\n" + gameStateJson);
                 _gameState = JsonConvert.DeserializeObject<Dictionary<string, string>>(gameStateJson);
                 Debug.Log("Game loaded");
             }
@@ -53,7 +49,11 @@ namespace SaveSystem
         public void SaveState()
         {
             var gameStateJson = JsonConvert.SerializeObject(_gameState);
-            PlayerPrefs.SetString(GAME_STATE_KEY, gameStateJson);
+            var encryptedData = Encryptor.Encrypt(gameStateJson);
+            Debug.Log("Saved Data:\n" + encryptedData);
+            Debug.Log("Saved Encrypted Data:\n" + gameStateJson);
+            PlayerPrefs.SetString(GAME_STATE_KEY, encryptedData);
+            PlayerPrefs.Save();
             Debug.Log("Game saved");
         }
     }
